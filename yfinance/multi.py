@@ -38,7 +38,7 @@ def download(tickers, start=None, end=None, actions=False, threads=True,
              ignore_tz=None, group_by='column', auto_adjust=False, back_adjust=False,
              repair=False, keepna=False, progress=True, period="max", interval="1d",
              prepost=False, proxy=None, rounding=False, timeout=10, session=None,
-             multi_level_index=True):
+             multi_level_index=False):
     """Download yahoo tickers
     :Parameters:
         tickers : str, list
