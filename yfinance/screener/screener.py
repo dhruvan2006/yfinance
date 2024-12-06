@@ -67,22 +67,9 @@ class Screener:
         """
         return self._predefined_bodies
 
-    def set_default_body(self, query: Query, offset: int = 0, size: int = 100, sortField: str = "ticker", sortType: str = "desc", quoteType: str = "equity", userId: str = "", userIdType: str = "guid") -> 'Screener':
+    def set_default_body(self, query: Query, offset: int = 0, size: int = 100, sortField: str = "ticker", sortType: str = "desc", quoteType: str = "equity", userId: str = "", userIdType: str = "guid") -> None:
         """
-        Set the default body using a custom query.
-
-        Args:
-            query (Query): The Query object to set as the body.
-            offset (Optional[int]): The offset for the results. Defaults to 0.
-            size (Optional[int]): The number of results to return. Defaults to 100. Maximum is 250 as set by Yahoo.
-            sortField (Optional[str]): The field to sort the results by. Defaults to "ticker".
-            sortType (Optional[str]): The type of sorting (e.g., "asc" or "desc"). Defaults to "desc".
-            quoteType (Optional[str]): The type of quote (e.g., "equity"). Defaults to "equity".
-            userId (Optional[str]): The user ID. Defaults to an empty string.
-            userIdType (Optional[str]): The type of user ID (e.g., "guid"). Defaults to "guid".
-        
-        Returns:
-            Screener: self
+        Set the default body using a custom query
 
         Example:
 
@@ -102,17 +89,10 @@ class Screener:
             "userId": userId,
             "userIdType": userIdType
         }
-        return self
 
-    def set_predefined_body(self, predefined_key: str) -> 'Screener':
+    def set_predefined_body(self, k: str) -> None:
         """
         Set a predefined body
-
-        Args: 
-            predefined_key (str): key to one of predefined screens 
-
-        Returns:
-            Screener: self
 
         Example:
 
@@ -126,23 +106,16 @@ class Screener:
             :attr:`Screener.predefined_bodies <yfinance.Screener.predefined_bodies>`
                 supported predefined screens
         """
-        body = PREDEFINED_SCREENER_BODY_MAP.get(predefined_key, None)
+        body = PREDEFINED_SCREENER_BODY_MAP.get(k, None)
         if not body:
-            raise ValueError(f'Invalid key {predefined_key} provided for predefined screener')
+            raise ValueError(f'Invalid key {k} provided for predefined screener')
         
         self._body_updated = True
         self._body = body
-        return self
 
-    def set_body(self, body: Dict) -> 'Screener':
+    def set_body(self, body: Dict) -> None:
         """
-        Set the fully custom body using dictionary input
-
-        Args: 
-            body (Dict): full query body
-
-        Returns:
-            Screener: self
+        Set the fully custom body 
         
         Example:
 
@@ -169,17 +142,11 @@ class Screener:
 
         self._body_updated = True
         self._body = body
-        return self
 
-    def patch_body(self, values: Dict) -> 'Screener':
+
+    def patch_body(self, values: Dict) -> None:
         """
-        Patch parts of the body using dictionary input
-
-        Args: 
-            body (Dict): partial query body
-
-        Returns:
-            Screener: self
+        Patch parts of the body
 
         Example:
 
@@ -194,14 +161,10 @@ class Screener:
         self._body_updated = True
         for k in values:
             self._body[k] = values[k]
-        return self
 
     def _validate_body(self) -> None:
         if not all(k in self._body for k in self._accepted_body_keys):
             raise ValueError("Missing required keys in body")
-        
-        if self._body["size"] > 250:
-            raise ValueError("Yahoo limits query size to 250. Please decrease the size of the query.")
 
     def _fetch(self) -> Dict:
         params_dict = {"corsDomain": "finance.yahoo.com", "formatted": "false", "lang": "en-US", "region": "US"}
