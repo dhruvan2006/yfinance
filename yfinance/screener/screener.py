@@ -9,7 +9,8 @@ from ..utils import dynamic_docstring, generate_list_table_from_dict_universal
 
 from .query import EquityQuery as EqyQy
 from .query import FundQuery as FndQy
-from .query import QueryBase, EquityQuery, FundQuery
+from .query import ETFQuery as EtfQy
+from .query import QueryBase, EquityQuery, FundQuery, ETFQuery
 
 _SCREENER_URL_ = f"{_QUERY1_URL_}/v1/finance/screener"
 _PREDEFINED_URL_ = f"{_SCREENER_URL_}/predefined/saved"
@@ -52,7 +53,7 @@ PREDEFINED_SCREENER_QUERIES = {
 }
 
 @dynamic_docstring({"predefined_screeners": generate_list_table_from_dict_universal(PREDEFINED_SCREENER_QUERIES, bullets=True, title='Predefined queries (Dec-2024)')})
-def screen(query: Union[str, EquityQuery, FundQuery],
+def screen(query: Union[str, EquityQuery, FundQuery, ETFQuery],
             offset: int = None, 
             size: int = None,
             count: int = None,
@@ -194,6 +195,8 @@ def screen(query: Union[str, EquityQuery, FundQuery],
         post_query['quoteType'] = 'EQUITY'
     elif isinstance(post_query['query'], FndQy):
         post_query['quoteType'] = 'MUTUALFUND'
+    elif isinstance(post_query['query'], EtfQy):
+        post_query['quoteType'] = 'ETF'
     post_query['query'] = post_query['query'].to_dict()
     data = dumps(post_query, separators=(",", ":"), ensure_ascii=False)
 

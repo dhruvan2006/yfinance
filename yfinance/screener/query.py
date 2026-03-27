@@ -4,6 +4,7 @@ from typing import List, Union, Dict, TypeVar, Tuple
 
 from yfinance.const import EQUITY_SCREENER_EQ_MAP, EQUITY_SCREENER_FIELDS
 from yfinance.const import FUND_SCREENER_EQ_MAP, FUND_SCREENER_FIELDS
+from yfinance.const import ETF_SCREENER_EQ_MAP, ETF_SCREENER_FIELDS
 from yfinance.exceptions import YFNotImplementedError
 from ..utils import dynamic_docstring, generate_list_table_from_dict_universal
 
@@ -216,3 +217,46 @@ class FundQuery(QueryBase):
         """
         return FUND_SCREENER_EQ_MAP
 
+
+class ETFQuery(QueryBase):
+    """
+    The `ETFQuery` class constructs filters for Exchange Traded Funds (ETFs) based on specific
+    criteria such as region, category, expense ratio, and performance.
+
+    Start with value operations: `EQ` (equals), `IS-IN` (is in), `BTWN` (between), `GT` (greater than), `LT` (less than), `GTE` (greater or equal), `LTE` (less or equal).
+
+    Combine them with logical operations: `AND`, `OR`.
+
+    Example:
+        Custom Yahoo query for low-cost, highly-rated Technology ETFs:
+
+        .. code-block:: python
+
+            from yfinance import ETFQuery
+
+            ETFQuery('and', [
+                ETFQuery('eq', ['categoryname', 'Technology']),
+                ETFQuery('is-in', ['performanceratingoverall', 4, 5]),
+                ETFQuery('lt', ['annualreportnetexpenseratio', 0.50]),
+                ETFQuery('gt', ['fundnetassets', 1000000000]),
+                ETFQuery('eq', ['exchange', 'NAS'])
+            ])
+    """
+
+    @dynamic_docstring({"valid_operand_fields_table": generate_list_table_from_dict_universal(ETF_SCREENER_FIELDS)})
+    @property
+    def valid_fields(self) -> Dict:
+        """
+        Valid operands, grouped by category.
+        {valid_operand_fields_table}
+        """
+        return ETF_SCREENER_FIELDS
+
+    @dynamic_docstring({"valid_values_table": generate_list_table_from_dict_universal(ETF_SCREENER_EQ_MAP)})
+    @property
+    def valid_values(self) -> Dict:
+        """
+        Most operands take number values, but some have a restricted set of valid values.
+        {valid_values_table}
+        """
+        return ETF_SCREENER_EQ_MAP

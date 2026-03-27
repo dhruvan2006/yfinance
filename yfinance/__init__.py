@@ -34,7 +34,7 @@ from .domain.industry import Industry
 from .domain.market import Market
 from .config import YfConfig as config
 
-from .screener.query import EquityQuery, FundQuery
+from .screener.query import EquityQuery, FundQuery, ETFQuery
 from .screener.screener import screen, PREDEFINED_SCREENER_QUERIES
 
 __version__ = version.version
